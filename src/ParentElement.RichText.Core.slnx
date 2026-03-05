@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ParentElement.RichText.Core.Tests/ParentElement.RichText.Core.Tests.csproj" Id="0de4b3b9-a8cc-4d2a-9fa2-9074ded7ddd8" />
+  <Project Path="ParentElement.RichText.Core/ParentElement.RichText.Core.csproj" />
+</Solution>

@@ -8,9 +8,14 @@
 	  <FileVersion>0.0.1</FileVersion>
 	  <Company>ParentElement, LLC</Company>
 	  <Authors>ParentElement, LLC</Authors>
+	  <Configurations>Debug;Release;Debug_All</Configurations>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_All|AnyCPU'">
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
@@ -18,7 +23,11 @@
     <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug_All'">
+    <ProjectReference Include="..\..\..\RichTextKit\Topten.RichTextKit\ParentElement.Topten.RichTextKit.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(Configuration)' != 'Debug_All'">
     <PackageReference Include="ParentElement.Topten.RichTextKit" Version="1.0.0" />
   </ItemGroup>
 

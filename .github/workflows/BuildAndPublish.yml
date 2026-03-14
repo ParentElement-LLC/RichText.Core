@@ -7,7 +7,7 @@ on:
     types: [created]
 
 jobs:
-  build-and-publish:
+  test-build-and-publish:
     permissions:
       contents: read
       id-token: write  # enable GitHub OIDC token issuance for this job
@@ -18,7 +18,8 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 10.0.x
-
+      - name: Run Tests
+        run: dotnet test ./src
       - name: Determine package version
         if: github.event_name == 'release'
         id: version
@@ -36,7 +37,6 @@ jobs:
           $assemblyVersion = $parts[0..3] -join '.'
           "VERSION=$packageVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
           "ASSEMBLY_VERSION=$assemblyVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
-
       - name: release build (with version)
         if: github.event_name == 'release'
         run: |

@@ -3,6 +3,7 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Tables;
 
+/// <summary>Represents a single cell in an <see cref="InlineTable"/>, including its span, header flag, background color, and inner content controller.</summary>
 public class TableCell
 {
     internal CellController Controller { get; }

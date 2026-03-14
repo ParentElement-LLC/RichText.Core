@@ -1,5 +1,6 @@
 namespace ParentElement.RichText.Core.Input;
 
+/// <summary>Represents a keyboard shortcut as a base key combined with optional Shift, Control, and Alt modifiers.</summary>
 public struct Shortcut
 {
     /// <summary>Initializes a new <see cref="Shortcut"/> for the given base key and optional modifier flags.</summary>

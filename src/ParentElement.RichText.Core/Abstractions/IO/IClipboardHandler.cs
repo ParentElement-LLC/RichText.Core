@@ -2,6 +2,7 @@ using ParentElement.RichText.Core.Content;
 
 namespace ParentElement.RichText.Core.Abstractions.IO;
 
+/// <summary>Platform-specific clipboard abstraction injected into <see cref="Core.Controllers.DocumentController"/> to support cut, copy, and paste operations.</summary>
 public interface IClipboardHandler
 {
     /// <summary>Retrieves plain text from the clipboard, or <c>null</c> if the clipboard contains no text.</summary>

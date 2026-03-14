@@ -2,6 +2,7 @@
 
 namespace ParentElement.RichText.Core.Content
 {
+    /// <summary>Exported representation of an inline table, including its dimensions, border settings, and a 2D array of <see cref="ContentTableCell"/> objects.</summary>
     public class ContentTable
     {
         /// <summary>The number of rows in the table.</summary>

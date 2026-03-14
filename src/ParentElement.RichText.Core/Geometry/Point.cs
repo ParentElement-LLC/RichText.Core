@@ -3,6 +3,7 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Geometry;
 
+/// <summary>A 2D point in pixel coordinates.</summary>
 public struct Point
 {
     /// <summary>Initializes a new <see cref="Point"/> with the given coordinates.</summary>

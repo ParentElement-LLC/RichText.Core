@@ -10,6 +10,10 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Abstractions.Controllers
 {
+    /// <summary>
+    /// The primary abstraction for a rich-text editor. Provides document editing, formatting,
+    /// navigation, clipboard, undo/redo, table management, image support, and rendering operations.
+    /// </summary>
     public interface IDocumentController: ITextDocumentView
     {
         /// <summary>Gets or sets the background color of the document page.</summary>

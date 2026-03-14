@@ -1,5 +1,6 @@
 namespace ParentElement.RichText.Core.Data;
 
+/// <summary>Page margin values in pixels for the four sides of the document page.</summary>
 public struct DocumentMargins
 {
     /// <summary>The left margin in pixels.</summary>

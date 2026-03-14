@@ -2,6 +2,7 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Geometry;
 
+/// <summary>An axis-aligned rectangle in pixel coordinates, defined by its position and size.</summary>
 public struct Rectangle
 {
     /// <summary>The x-coordinate of the left edge of the rectangle.</summary>

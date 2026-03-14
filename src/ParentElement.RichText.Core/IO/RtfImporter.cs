@@ -7,6 +7,7 @@ using System.Text;
 
 namespace ParentElement.RichText.Core.IO
 {
+    /// <summary>Imports document content from Rich Text Format (RTF).</summary>
     public class RtfImporter : ImporterBase
     {
         // Half-points → px  (inverse of PxToHalfPoints in RtfExporter)
@@ -18,6 +19,7 @@ namespace ParentElement.RichText.Core.IO
         private const float _kListIndentPerLevel = 30f;
 
 
+        /// <inheritdoc/>
         public override async Task ImportAsync(IDocumentController controller, Stream inputStream)
         {
             using var reader = new StreamReader(inputStream, Encoding.ASCII, leaveOpen: true);
@@ -26,6 +28,7 @@ namespace ParentElement.RichText.Core.IO
             await InsertMixedBlocks(controller, blocks);
         }
 
+        /// <inheritdoc/>
         public override async Task ImportAsync(IDocumentController controller, string filePath)
         {
             await using var stream = File.OpenRead(filePath);

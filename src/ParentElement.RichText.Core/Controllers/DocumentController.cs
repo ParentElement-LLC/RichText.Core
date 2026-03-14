@@ -13,17 +13,27 @@ using System.Numerics;
 
 namespace ParentElement.RichText.Core.Controllers;
 
+/// <summary>
+/// Core rich-text editor controller. Manages the document, selection, caret,
+/// tables, images, clipboard, undo/redo, and rendering.
+/// Implement <see cref="IDocumentController"/> to consume this type via abstraction.
+/// </summary>
 public class DocumentController : IDocumentController
 {
+    /// <inheritdoc/>
     public ShortcutHandler Shortcuts => _shortcuts;
+
+    /// <inheritdoc/>
     public SKColor SelectionColor { get; set; } = SKColors.LightGray;
 
+    /// <inheritdoc/>
     public SKColor BackgroundColor
     {
         get => _backgroundPaint.Color;
         set => _backgroundPaint = new SKPaint { Color = value };
     }
 
+    /// <inheritdoc/>
     public Rectangle VisibleBounds
     {
         get { return _visibleBounds; }
@@ -42,10 +52,13 @@ public class DocumentController : IDocumentController
         }
     }
 
+    /// <inheritdoc/>
     public bool HasFocus { get; set; }
 
+    /// <inheritdoc/>
     public bool ReadOnly { get; set; }
 
+    /// <inheritdoc/>
     public float DocumentHeight
     {
         get
@@ -60,20 +73,26 @@ public class DocumentController : IDocumentController
         }
     }
 
+    /// <inheritdoc/>
     public float PageWidth
     {
         get => _document.PageWidth;
         set => _document.PageWidth = value;
     }
 
+    /// <inheritdoc/>
     public float ScrollScale
     {
         get => _scrollScale;
         set => _scrollScale = Math.Abs(value);
     }
 
+    /// <inheritdoc/>
     public DocumentSettings Settings { get; private set; }
 
+    /// <summary>
+    /// Initializes a new <see cref="DocumentController"/> with the given document settings and clipboard handler.
+    /// </summary>
     public DocumentController(DocumentSettings config, IClipboardHandler clipboard)
     {
         Settings = config;
@@ -110,6 +129,7 @@ public class DocumentController : IDocumentController
 
     #region Text Styling
 
+    /// <inheritdoc/>
     public Task ApplyStyle(IStyle style)
     {
         if (ApplyToSelectedCells(cc => cc.ApplyStyle(style))) return Task.CompletedTask;
@@ -141,6 +161,7 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public void ReplaceStyle(IStyle style)
     {
         _textStyle = _styleManager.FromStyle(style);
@@ -172,6 +193,7 @@ public class DocumentController : IDocumentController
         }
     }
 
+    /// <inheritdoc/>
     public Task ApplyBold()
     {
         if (ApplyToSelectedCells(cc => cc.ApplyBold())) return Task.CompletedTask;
@@ -180,6 +202,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyUnderline()
     {
         if (ApplyToSelectedCells(cc => cc.ApplyUnderline())) return Task.CompletedTask;
@@ -188,6 +211,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyItalic()
     {
         if (ApplyToSelectedCells(cc => cc.ApplyItalic())) return Task.CompletedTask;
@@ -196,6 +220,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyStrikethrough()
     {
         if (ApplyToSelectedCells(cc => cc.ApplyStrikethrough())) return Task.CompletedTask;
@@ -206,6 +231,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyFontColor(SKColor color)
     {
         if (ApplyToSelectedCells(cc => cc.ApplyFontColor(color))) return Task.CompletedTask;
@@ -216,6 +242,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyBackgroundColor(SKColor color)
     {
         if (ApplyToSelectedCells(cc => cc.ApplyBackgroundColor(color))) return Task.CompletedTask;
@@ -226,6 +253,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyFontFamily(string fontFamily)
     {
         if (ApplyToSelectedCells(cc => cc.ApplyFontFamily(fontFamily))) return Task.CompletedTask;
@@ -236,6 +264,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyFontSize(int fontSize)
     {
         if (ApplyToSelectedCells(cc => cc.ApplyFontSize(fontSize))) return Task.CompletedTask;
@@ -244,6 +273,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplySubscript()
     {
         if (ApplyToSelectedCells(cc => cc.ApplySubscript())) return Task.CompletedTask;
@@ -257,6 +287,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplySuperscript()
     {
         if (ApplyToSelectedCells(cc => cc.ApplySuperscript())) return Task.CompletedTask;
@@ -270,6 +301,7 @@ public class DocumentController : IDocumentController
         return ApplyStyle(style);
     }
 
+    /// <inheritdoc/>
     public Task ApplyAlignment(TextAlignment alignment)
     {
         if (ApplyToSelectedCells(cc => cc.ApplyAlignment(alignment))) return Task.CompletedTask;
@@ -280,6 +312,7 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public void SetBlockIndent(float value)
     {
         _document.SetBlockIndent(_selection, value);
@@ -297,12 +330,14 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public void AdjustParagraphIndent(float amount)
     {
         _document.AdjustParagraphIndent(_selection, amount);
         MoveCaret(_selection.CaretPosition);
     }
 
+    /// <inheritdoc/>
     public void ToggleBulletList()
     {
         if (ApplyToSelectedCells(cc => cc.ToggleBulletList())) return;
@@ -314,6 +349,7 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public void ToggleNumberedList()
     {
         if (ApplyToSelectedCells(cc => cc.ToggleNumberedList())) return;
@@ -328,6 +364,7 @@ public class DocumentController : IDocumentController
     private ListType GetListTypeAtSelection()
         => _document.GetSelectionInfo(_selection).ParagraphListType ?? ListType.None;
 
+    /// <inheritdoc/>
     public void ChangeListLevel(int delta)
     {
         if (ApplyToSelectedCells(cc => cc.ChangeListLevel(delta))) return;
@@ -337,6 +374,7 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public void AdjustLineSpacing(float amount)
     {
         if (ApplyToSelectedCells(cc => cc.AdjustLineSpacing(amount))) return;
@@ -346,6 +384,7 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public void ToggleFirstLineIndent()
     {
         _document.FirstLineIndent = _document.FirstLineIndent == 20 ? 0 : 20;
@@ -355,6 +394,7 @@ public class DocumentController : IDocumentController
 
     #region Document Navigation
 
+    /// <inheritdoc/>
     public void ScrollBy(float x, float y)
     {
         x = _viewModifier.Offset.X + (x * _scrollScale);
@@ -376,6 +416,7 @@ public class DocumentController : IDocumentController
         Invalidate();
     }
 
+    /// <inheritdoc/>
     public void ScrollTo(float x, float y)
     {
         float maxScrollY = Math.Max(0f, (Settings.ShowPageBreaks ? TotalScrollHeight() : _document.MeasuredHeight) - VisibleBounds.Height);
@@ -386,6 +427,7 @@ public class DocumentController : IDocumentController
         Invalidate();
     }
 
+    /// <inheritdoc/>
     public void Click(Point point)
     {
         var offset = point.FromView(_viewModifier);
@@ -528,6 +570,7 @@ public class DocumentController : IDocumentController
         MoveCaret(position.CaretPosition);
     }
 
+    /// <inheritdoc/>
     public void DragTo(Point point)
     {
         var offset = point.FromView(_viewModifier);
@@ -766,6 +809,7 @@ public class DocumentController : IDocumentController
 
     #region Text Selection
 
+    /// <inheritdoc/>
     public Task SelectAll()
     {
         if (ActiveCellController is { } ccSelAll) { ccSelAll.SelectAll(); AfterCellEdit(); return Task.CompletedTask; }
@@ -773,11 +817,13 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public void SelectNone()
     {
         SetSelection(new TextRange(0));
     }
 
+    /// <inheritdoc/>
     public void ClearDocument()
     {
         var range = new TextRange(0, _document.Length - 1);
@@ -787,8 +833,10 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public bool IsModified { get; private set; }
 
+    /// <inheritdoc/>
     public void MarkClean() => IsModified = false;
 
     private TextRange SetSelection(TextRange value, bool fireEvent = true)
@@ -822,6 +870,7 @@ public class DocumentController : IDocumentController
 
     #region Input
 
+    /// <inheritdoc/>
     public async Task Cut()
     {
         if (ReadOnly) return;
@@ -840,6 +889,7 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public async Task<bool> Copy()
     {
         if (ActiveCellController is { } ccCopy)
@@ -873,6 +923,7 @@ public class DocumentController : IDocumentController
         return true;
     }
 
+    /// <inheritdoc/>
     public async Task Paste()
     {
         if (ActiveCellController is { } ccPaste)
@@ -945,6 +996,9 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Execute a backspace command.
+    /// </summary>
     protected Task Backspace()
     {
         if (ReadOnly)
@@ -970,6 +1024,7 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public void Insert(string text)
     {
         if (ActiveCellController is { } ccInsert) { ccInsert.Insert(text); AfterCellEdit(); return; }
@@ -1003,6 +1058,7 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public InlineTable InsertTable(TableOptions options)
     {
         if (ReadOnly) return new InlineTable(options,
@@ -1051,12 +1107,15 @@ public class DocumentController : IDocumentController
         }
     }
 
+    /// <inheritdoc/>
     public bool IsInTableCell => _activeTable != null;
 
+    /// <inheritdoc/>
     public bool IsInTableHeaderRow =>
         _activeTable != null && _activeRow >= 0 && _activeCol >= 0 &&
         (_activeTable.GetCell(_activeRow, _activeCol)?.IsHeader ?? false);
 
+    /// <inheritdoc/>
     public void InsertTableRowBefore()
     {
         if (ReadOnly || _activeTable == null || IsInTableHeaderRow) return;
@@ -1067,6 +1126,7 @@ public class DocumentController : IDocumentController
         AfterCellEdit();
     }
 
+    /// <inheritdoc/>
     public void InsertTableRowAfter()
     {
         if (ReadOnly || _activeTable == null) return;
@@ -1077,6 +1137,7 @@ public class DocumentController : IDocumentController
         AfterCellEdit();
     }
 
+    /// <inheritdoc/>
     public void InsertTableColumnBefore()
     {
         if (ReadOnly || _activeTable == null) return;
@@ -1087,6 +1148,7 @@ public class DocumentController : IDocumentController
         AfterCellEdit();
     }
 
+    /// <inheritdoc/>
     public void InsertTableColumnAfter()
     {
         if (ReadOnly || _activeTable == null) return;
@@ -1097,11 +1159,14 @@ public class DocumentController : IDocumentController
         AfterCellEdit();
     }
 
+    /// <inheritdoc/>
     public bool IsMultiCellSelectingTable => _isMultiCellSelecting;
 
+    /// <inheritdoc/>
     public bool CanMergeSelectedCells() =>
         _isMultiCellSelecting && _activeTable != null && _activeTable.CanMergeSelection();
 
+    /// <inheritdoc/>
     public void MergeSelectedCells()
     {
         if (ReadOnly || !_isMultiCellSelecting || _activeTable == null) return;
@@ -1116,6 +1181,7 @@ public class DocumentController : IDocumentController
         AfterCellEdit();
     }
 
+    /// <inheritdoc/>
     public void DeleteTableRow()
     {
         if (ReadOnly || _activeTable == null) return;
@@ -1154,6 +1220,7 @@ public class DocumentController : IDocumentController
         AfterCellEdit();
     }
 
+    /// <inheritdoc/>
     public void DeleteTableColumn()
     {
         if (ReadOnly || _activeTable == null) return;
@@ -1202,6 +1269,7 @@ public class DocumentController : IDocumentController
         PublishSelectionInfo();
     }
 
+    /// <inheritdoc/>
     public Task Undo()
     {
         if (ReadOnly) return Task.CompletedTask;
@@ -1211,6 +1279,7 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public Task Redo()
     {
         if (ReadOnly) return Task.CompletedTask;
@@ -1220,6 +1289,7 @@ public class DocumentController : IDocumentController
         return Task.CompletedTask;
     }
 
+    /// <inheritdoc/>
     public async Task<bool> OnKeyEvent(KeyInfo key)
     {
         if (_activeTable != null)
@@ -1470,6 +1540,7 @@ public class DocumentController : IDocumentController
 
     #endregion
 
+    /// <inheritdoc/>
     public void ApplyDocumentSettings(DocumentSettings settings)
     {
         Settings = settings;
@@ -1483,6 +1554,7 @@ public class DocumentController : IDocumentController
     private readonly object _drawLock = new object();
     private bool _isDrawing = false;
 
+    /// <inheritdoc/>
     public void Draw(SKCanvas canvas)
     {
         //Prevent unnecessary draw operations if one is in progress, skip the next
@@ -1786,6 +1858,7 @@ public class DocumentController : IDocumentController
         return 0f;
     }
 
+    /// <inheritdoc/>
     public int GetPageCount()
     {
         float contentH = Settings.PageHeight - Settings.DocumentMargins.Top - Settings.DocumentMargins.Bottom;
@@ -1846,6 +1919,7 @@ public class DocumentController : IDocumentController
         canvas.Restore();
     }
 
+    /// <inheritdoc/>
     public void PrintToPdf(Stream stream)
     {
         float contentH = Settings.PageHeight - Settings.DocumentMargins.Top - Settings.DocumentMargins.Bottom;
@@ -2589,6 +2663,7 @@ public class DocumentController : IDocumentController
 
     #endregion
 
+    /// <inheritdoc/>
     public DocumentReader GetContentReader()
     {
         return new DocumentReader(_document);
@@ -2725,15 +2800,16 @@ public class DocumentController : IDocumentController
 
     #region Fields
 
+    /// <inheritdoc/>
     public Action? RequestRedraw { get; set; }
 
-    /// <summary>
-    /// Invoked whenever the pointer moves over the editor so the UI layer can update the cursor.
-    /// The argument is the desired cursor shape based on what is under the pointer.
-    /// </summary>
+    /// <inheritdoc/>
     public Action<EditorCursor>? RequestCursorUpdate { get; set; }
 
+    /// <inheritdoc/>
     public event Action<NavigationInfo>? OnNavigation;
+
+    /// <inheritdoc/>
     public event Action<DocumentInfo>? OnContentSizeChanged;
 
     private readonly TextDocument _document;

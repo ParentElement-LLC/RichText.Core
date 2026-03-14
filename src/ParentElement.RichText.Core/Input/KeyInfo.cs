@@ -1,5 +1,6 @@
 namespace ParentElement.RichText.Core.Input;
 
+/// <summary>Represents a single keyboard event, including the key code, modifier state, and the Unicode character produced (if any).</summary>
 public struct KeyInfo
 {
     /// <summary>The logical key that was pressed.</summary>

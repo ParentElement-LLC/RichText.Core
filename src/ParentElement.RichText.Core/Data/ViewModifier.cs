@@ -2,6 +2,7 @@ using System.Numerics;
 
 namespace ParentElement.RichText.Core.Data;
 
+/// <summary>Holds the current scale and scroll offset applied to the editor viewport, along with a pre-computed scaled offset for efficient coordinate transforms.</summary>
 public struct ViewModifier
 {
     private Vector2 _scale;

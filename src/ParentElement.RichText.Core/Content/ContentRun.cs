@@ -3,6 +3,7 @@ using ParentElement.Topten.RichTextKit;
 
 namespace ParentElement.RichText.Core.Content
 {
+    /// <summary>A contiguous sequence of characters (or a single inline image/table) within a <see cref="ContentBlock"/>, sharing a common character style.</summary>
     public class ContentRun
     {
         /// <summary>The plain text content of this run. <c>null</c> for image and table runs.</summary>

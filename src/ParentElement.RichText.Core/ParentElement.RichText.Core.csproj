@@ -51,4 +51,8 @@
 	<ItemGroup>
 		<Folder Include="IO\" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="icon.png" Pack="true" PackagePath="" />
+	</ItemGroup>
 </Project>

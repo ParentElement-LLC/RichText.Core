@@ -1,5 +1,6 @@
 namespace ParentElement.RichText.Core.Input;
 
+/// <summary>Maps keyboard shortcuts to async actions and executes the matching action when a shortcut is triggered.</summary>
 public class ShortcutHandler
 {
     private Dictionary<Shortcut, Func<Task>> _shortcuts = new Dictionary<Shortcut, Func<Task>>();

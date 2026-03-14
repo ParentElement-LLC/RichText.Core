@@ -3,8 +3,12 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Data;
 
+/// <summary>Immutable-by-convention settings passed to <see cref="Controllers.DocumentController"/> to configure page layout, default style, and visual appearance.</summary>
 public struct DocumentSettings
 {
+    /// <summary>
+    /// Initializes a new DocumentSettings object.
+    /// </summary>
     public DocumentSettings()
     {
         DocumentMargins = default;

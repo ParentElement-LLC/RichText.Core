@@ -7,6 +7,7 @@ using System.Text;
 
 namespace ParentElement.RichText.Core.IO
 {
+    /// <summary>Exports document content to Rich Text Format (RTF).</summary>
     public class RtfExporter : ExporterBase
     {
         // At 96 DPI: 1 inch = 96px = 1440 twips → 1px = 15 twips
@@ -20,6 +21,7 @@ namespace ParentElement.RichText.Core.IO
         // Bullet hanging indent (matches TextParagraph.kBulletWidth = 20f px)
         private const float _kBulletHang = 20f;
 
+        /// <inheritdoc/>
         public override async Task ExportAsync(IDocumentController controller, Stream outputStream)
         {
             var reader = controller.GetContentReader();
@@ -521,6 +523,7 @@ namespace ParentElement.RichText.Core.IO
             }
         }
 
+        /// <inheritdoc/>
         public override async Task ExportAsync(IDocumentController controller, string filePath)
         {
             await using var stream = File.Create(filePath);

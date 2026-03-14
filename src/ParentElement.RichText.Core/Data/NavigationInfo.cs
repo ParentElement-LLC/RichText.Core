@@ -2,6 +2,7 @@ using ParentElement.Topten.RichTextKit;
 
 namespace ParentElement.RichText.Core.Data;
 
+/// <summary>Caret/selection state raised via <see cref="Abstractions.Controllers.IDocumentController.OnNavigation"/> whenever the selection changes.</summary>
 public struct NavigationInfo
 {
     /// <summary>The resolved character style at the current caret position.</summary>

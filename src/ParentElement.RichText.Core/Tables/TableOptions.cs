@@ -2,6 +2,7 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Tables;
 
+/// <summary>Configuration options passed to <see cref="InlineTable"/> (or <see cref="Abstractions.Controllers.IDocumentController.InsertTable"/>) when creating a new inline table.</summary>
 public class TableOptions
 {
     /// <summary>The number of rows in the table.</summary>

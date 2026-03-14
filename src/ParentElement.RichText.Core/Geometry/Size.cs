@@ -1,5 +1,6 @@
 namespace ParentElement.RichText.Core.Geometry;
 
+/// <summary>Represents a width and height in pixels.</summary>
 public struct Size
 {
     /// <summary>The width component in pixels.</summary>

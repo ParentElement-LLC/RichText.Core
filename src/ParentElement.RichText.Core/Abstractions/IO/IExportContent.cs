@@ -2,6 +2,7 @@ using ParentElement.RichText.Core.Abstractions.Controllers;
 
 namespace ParentElement.RichText.Core.Abstractions.IO
 {
+    /// <summary>Contract for exporting a document to an external format (e.g. RTF, HTML, PDF).</summary>
     public interface IExportContent
     {
         /// <summary>Exports the document held by <paramref name="controller"/> and writes the result to <paramref name="outputStream"/>.</summary>

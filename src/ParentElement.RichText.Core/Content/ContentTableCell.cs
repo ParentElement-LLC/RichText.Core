@@ -2,6 +2,7 @@
 
 namespace ParentElement.RichText.Core.Content
 {
+    /// <summary>Exported representation of a single table cell, including span, header flag, background color, and block-level content.</summary>
     public class ContentTableCell
     {
         /// <summary>The number of rows this cell spans. Defaults to 1.</summary>

@@ -3,6 +3,11 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Tables;
 
+/// <summary>
+/// An inline table that flows with document text as a single <see cref="IInlineObject"/> placeholder.
+/// Manages a grid of <see cref="TableCell"/> objects with support for spanning, merging, column resizing,
+/// row/column insertion and deletion, and multi-cell selection.
+/// </summary>
 public class InlineTable : IInlineObject
 {
     internal const float _cellPadding = 4f;
@@ -23,17 +28,25 @@ public class InlineTable : IInlineObject
     private (int row, int col) _selEnd;
     private bool _hasMultiSelection;
 
+    /// <summary>Invoked after a row height change that affects the table's total height, so the host document can re-layout.</summary>
     public Action? OnHeightChanged { get; set; }
 
+    /// <summary>The total rendered width of the table in pixels, including all borders.</summary>
     public float Width => _totalWidth;
     private float EffBw => _options.BorderStyle == TableBorderStyle.None ? 0f : _options.BorderWidth;
+    /// <summary>The effective border width in pixels (0 when <see cref="BorderStyle"/> is <see cref="TableBorderStyle.None"/>).</summary>
     public float BorderWidth => EffBw;
 
+    /// <summary>The current net content width of each column in pixels (excludes cell padding and borders).</summary>
     public IReadOnlyList<float> ColWidths => _colWidths;
+    /// <summary>The current height of each row in pixels (includes cell padding; recomputed on demand).</summary>
     public IReadOnlyList<float> RowHeights { get { RecalcRowHeights(); return _rowHeights; } }
+    /// <summary>The line style applied to table borders.</summary>
     public TableBorderStyle BorderStyle => _options.BorderStyle;
+    /// <summary>The color applied to table borders.</summary>
     public SKColor BorderColor => _options.BorderColor;
 
+    /// <summary>The total rendered height of the table in pixels, including all rows and borders.</summary>
     public float Height
     {
         get
@@ -45,7 +58,9 @@ public class InlineTable : IInlineObject
         }
     }
 
+    /// <summary>The number of rows in the table.</summary>
     public int Rows => _options.Rows;
+    /// <summary>The number of columns in the table.</summary>
     public int Cols => _options.Columns;
 
     /// <summary>Returns true when no primary cells remain (every grid slot is null).</summary>
@@ -60,6 +75,10 @@ public class InlineTable : IInlineObject
         }
     }
 
+    /// <summary>
+    /// Creates a new <see cref="InlineTable"/> with the given options, distributing columns evenly
+    /// across <paramref name="contentWidth"/> and initializing all cells with <paramref name="defaultStyle"/>.
+    /// </summary>
     public InlineTable(TableOptions opts, float contentWidth, IStyle defaultStyle, Action invalidate)
     {
         _options = opts;
@@ -270,6 +289,7 @@ public class InlineTable : IInlineObject
             OnHeightChanged?.Invoke();
     }
 
+    /// <summary>Recomputes <see cref="RowHeights"/> by querying the measured height of each cell's content.</summary>
     public void RecalcRowHeights()
     {
         for (int r = 0; r < _options.Rows; r++)
@@ -370,6 +390,7 @@ public class InlineTable : IInlineObject
         return new SKRect(left, top, left + width, top + height);
     }
 
+    /// <summary>Returns the (row, col) of the primary cell at the given table-local point, or null if the point is outside all cells.</summary>
     public (int row, int col)? HitTestCell(SKPoint tableLocalPoint)
     {
         for (int r = 0; r < _options.Rows; r++)
@@ -389,6 +410,7 @@ public class InlineTable : IInlineObject
     // Multi-cell selection
     // -----------------------------------------------------------------------------------------
 
+    /// <summary>Whether two or more cells are currently highlighted as part of a multi-cell selection.</summary>
     public bool HasMultiSelection => _hasMultiSelection;
 
     /// <summary>
@@ -431,6 +453,7 @@ public class InlineTable : IInlineObject
         return (minCol, maxCol);
     }
 
+    /// <summary>Sets the multi-cell selection to the rectangle spanning from (r1, c1) to (r2, c2).</summary>
     public void SetMultiSelection(int r1, int c1, int r2, int c2)
     {
         _selAnchor = (r1, c1);
@@ -438,6 +461,7 @@ public class InlineTable : IInlineObject
         _hasMultiSelection = true;
     }
 
+    /// <summary>Clears the current multi-cell selection.</summary>
     public void ClearMultiSelection()
     {
         _hasMultiSelection = false;
@@ -599,6 +623,7 @@ public class InlineTable : IInlineObject
     // Structural mutations (row/column add/delete)
     // -----------------------------------------------------------------------------------------
 
+    /// <summary>Appends a new empty row to the bottom of the table.</summary>
     public void AddRow()
     {
         var newRow = new TableCell?[_options.Columns];
@@ -757,6 +782,7 @@ public class InlineTable : IInlineObject
     // Painting
     // -----------------------------------------------------------------------------------------
 
+    /// <summary>Paints the full table (background, cell fills, content, and borders) onto <paramref name="canvas"/> at the given <paramref name="origin"/>.</summary>
     public void Paint(SKCanvas canvas, SKPoint origin)
     {
         RecalcRowHeights();

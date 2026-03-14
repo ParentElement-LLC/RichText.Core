@@ -2,6 +2,7 @@ using System.Globalization;
 
 namespace ParentElement.RichText.Core.Input;
 
+/// <summary>Utility methods for mapping <see cref="KeyCode"/> values to printable characters and for identifying modifier keys.</summary>
 public static class KeyMap
 {
     /// <summary>

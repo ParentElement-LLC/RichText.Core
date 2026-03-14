@@ -2,6 +2,7 @@ using System.Numerics;
 
 namespace ParentElement.RichText.Core.Data;
 
+/// <summary>Snapshot of document dimensions and scroll position, raised via <see cref="Abstractions.Controllers.IDocumentController.OnContentSizeChanged"/>.</summary>
 public struct DocumentInfo
 {
     /// <summary>The total rendered height of the document content in pixels.</summary>

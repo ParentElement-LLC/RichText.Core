@@ -5,6 +5,7 @@ using ParentElement.Topten.RichTextKit.Editor;
 
 namespace ParentElement.RichText.Core.Content
 {
+    /// <summary>A single paragraph-level block within an exported or read document, containing a type, alignment, list state, and a sequence of inline <see cref="ContentRun"/> objects.</summary>
     public class ContentBlock
     {
         /// <summary>The structural type of this block (e.g. paragraph).</summary>

@@ -7,6 +7,10 @@ using SkiaSharp;
 
 namespace ParentElement.RichText.Core.Content
 {
+    /// <summary>
+    /// Provides read-only access to the structured content of a <see cref="TextDocument"/>,
+    /// yielding paragraphs as <see cref="ContentBlock"/> objects with their inline runs.
+    /// </summary>
     public class DocumentReader
     {
         private readonly TextDocument _document;
@@ -15,6 +19,7 @@ namespace ParentElement.RichText.Core.Content
         /// <summary>The underlying <see cref="TextDocument"/> being read.</summary>
         public TextDocument Document=> _document;
 
+        /// <summary>Initializes a new <see cref="DocumentReader"/> that reads from the given <paramref name="document"/>.</summary>
         public DocumentReader(TextDocument document)
         {
             _document = document;

@@ -1,7 +1,9 @@
 ﻿namespace ParentElement.RichText.Core.Input;
 
+/// <summary>Platform-independent virtual key codes used by <see cref="KeyInfo"/> and <see cref="Shortcut"/>.</summary>
 public enum KeyCode
 {
+#pragma warning disable CS1591
     None = -1,
     Back = 8, //Backspace
     Tab = 9,
@@ -116,4 +118,5 @@ public enum KeyCode
     OemCloseBrackets = 221,
     OemQuotes = 222,
     OemBackslash = 226,
+#pragma warning restore
 }

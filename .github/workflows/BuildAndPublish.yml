@@ -1,0 +1,67 @@
+name: BuildAndPack
+on:
+  push:
+    branches: [main]
+  pull_request:
+  release:
+    types: [created]
+
+jobs:
+  build-and-publish:
+    permissions:
+      contents: read
+      id-token: write  # enable GitHub OIDC token issuance for this job
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Determine package version
+        if: github.event_name == 'release'
+        id: version
+        shell: pwsh
+        run: |
+          $tag = '${{ github.event.release.tag_name }}'
+          $baseVersion = $tag -replace '^v', ''
+          $packageVersion = $baseVersion
+          if ('${{ github.event.release.prerelease }}' -eq 'true') {
+            $packageVersion = "$baseVersion-pre"
+          }
+          # AssemblyVersion requires a numeric-only 4-part version (e.g. 1.2.3.0)
+          $parts = $baseVersion -split '\.'
+          while ($parts.Count -lt 4) { $parts += '0' }
+          $assemblyVersion = $parts[0..3] -join '.'
+          "VERSION=$packageVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+          "ASSEMBLY_VERSION=$assemblyVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: release build (with version)
+        if: github.event_name == 'release'
+        run: |
+          dotnet build -c Release -o artifacts \
+            -p:Version=${{ steps.version.outputs.VERSION }} \
+            -p:AssemblyVersion=${{ steps.version.outputs.ASSEMBLY_VERSION }} \
+            -p:FileVersion=${{ steps.version.outputs.ASSEMBLY_VERSION }}
+
+      - name: release build
+        if: github.event_name != 'release'
+        run: |
+          dotnet build -c Release -o artifacts
+
+      - name: NuGet login (OIDC → temp API key)
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
+      - name: push to NuGet
+        if: github.event_name == 'release'
+        shell: pwsh
+        run: |
+          Get-ChildItem artifacts -Filter *.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName `
+              --api-key "${{ steps.login.outputs.NUGET_API_KEY }}" `
+              --source https://api.nuget.org/v3/index.json
+          }

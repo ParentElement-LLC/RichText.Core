@@ -1,28 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-	  <AssemblyVersion>0.0.1</AssemblyVersion>
-	  <FileVersion>0.0.1</FileVersion>
-	  <Company>ParentElement, LLC</Company>
-	  <Authors>ParentElement, LLC</Authors>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AssemblyVersion>0.0.1</AssemblyVersion>
+		<FileVersion>0.0.1</FileVersion>
+		<Configurations>Debug;Release;Debug_All</Configurations>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)'=='Release'">
+		<Title>RichText Core</Title>
+		<Authors>ParentElement, LLC</Authors>
+		<Company>ParentElement, LLC</Company>
+		<PackageId>ParentElement.RichText.Core</PackageId>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com/ParentElement-LLC/RichText.Core</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/ParentElement-LLC/RichText.Core</PackageProjectUrl>
+		<PackageTags>rich text, rich, text, Skia, SkiaSharp, Font</PackageTags>
+		<Description>Core controller package for ParentElement.TopTen.RichTextKit.</Description>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<Copyright>2026</Copyright>
+		<EnablePackageValidation>true</EnablePackageValidation>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<IsPackable>true</IsPackable>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+	</PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
-  </PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="ParentElement.Topten.RichTextKit" Version="1.0.0" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug_All|AnyCPU'">
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="IO\" />
-  </ItemGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(Configuration)' == 'Debug_All'">
+		<ProjectReference Include="..\..\..\RichTextKit\Topten.RichTextKit\ParentElement.Topten.RichTextKit.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(Configuration)' != 'Debug_All'">
+		<PackageReference Include="ParentElement.Topten.RichTextKit" Version="1.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="IO\" />
+	</ItemGroup>
 </Project>

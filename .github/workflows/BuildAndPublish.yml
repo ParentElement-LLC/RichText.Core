@@ -40,7 +40,7 @@ jobs:
       - name: release build (with version)
         if: github.event_name == 'release'
         run: |
-          dotnet build -c Release -o artifacts \
+          dotnet build ./src/ParentElement.RichText.Core/ParentElement.RichText.Core.csproj -c Release -o artifacts \
             -p:Version=${{ steps.version.outputs.VERSION }} \
             -p:AssemblyVersion=${{ steps.version.outputs.ASSEMBLY_VERSION }} \
             -p:FileVersion=${{ steps.version.outputs.ASSEMBLY_VERSION }}
@@ -48,7 +48,7 @@ jobs:
       - name: release build
         if: github.event_name != 'release'
         run: |
-          dotnet build -c Release -o artifacts
+          dotnet build ./src/ParentElement.RichText.Core/ParentElement.RichText.Core.csproj -c Release -o artifacts
 
       - name: NuGet login (OIDC → temp API key)
         uses: NuGet/login@v1

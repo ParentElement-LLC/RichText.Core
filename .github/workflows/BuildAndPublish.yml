@@ -51,6 +51,7 @@ jobs:
           dotnet build ./src/ParentElement.RichText.Core/ParentElement.RichText.Core.csproj -c Release -o artifacts
 
       - name: NuGet login (OIDC → temp API key)
+        if: github.event_name == 'release'
         uses: NuGet/login@v1
         id: login
         with:
